@@ -89,9 +89,13 @@ class GaussianNaiveBayes:
         # If prior is uniform, create the prior
 
         # Creating likelihoods for each class label
+        # likelihoods shape = [n_labels][n_samples, n_features]
         likelihoods = []
         for i in range(0, self.n_labels_):
-            likelihoods.append(self._gaussian(X, self.params_[i, 0, :], self.params_[i, 1, :]))
+            mean = self.params_[i, 0, :]
+            var = self.params_[i, 1, :]
+            gaussian = (1/np.sqrt(2*np.pi*var))*np.exp(-(X-mean)*(X-mean)/(2*var))
+            likelihoods.append(gaussian)
 
         # Using likelihoods and prior with N-bayes formula
         # Post is a list of the posterior probabilities separated by label
@@ -112,7 +116,6 @@ class GaussianNaiveBayes:
         percent_correct = correct / len(y)
         print("The prediction is " + str(percent_correct) + "% correct")
         return predict
-
 
     def _sort_data(self, X, y):
         """
@@ -140,28 +143,10 @@ class GaussianNaiveBayes:
         # Data will contain arrays of training vectors separated by class
         # Data is a list of numpy arrays
         data_ = []
-        for i in range(0, len(labels)):
-            mask = (X[:, -1] == labels[i])
+        for i in range(0, len(self.labels_)):
+            mask = (X[:, -1] == self.labels_[i])
             data_.append(X[mask, :])
         return data_
-
-    def _gaussian(self, x, mean, var):
-        """
-                Calculates the likelihoods based on a Gaussian distribution
-
-                Parameters:
-                    x: array-like, shape = [n_samples, 1]
-                        Test vectors
-                    mean: double
-                        mean for the given data point
-                    var: double
-                        variance for the given data points
-
-                Returns:
-                    Gauss: array-like, shape
-                        likelihoods for the datapoints from x
-                """
-        return (1/np.sqrt(2*np.pi*var))*np.exp(-(x-mean)*(x-mean)/(2*var))
 
     def _create_prior(self):
         """
