@@ -65,11 +65,20 @@ class GaussianNaiveBayes:
         # Each array in data is the training set for a given class label
         data_ = self._sort_data(X, y)
 
+        # Creates n_labels matrices holding the mean and variance for each column
+        n_cols = X.shape[1]
+        self.params_ = np.zeros((self.n_labels_, 2, n_cols))
+
         # Calculate mean and variance of data and store in params
         for i in range(0, len(data_)):
-            for j in range(0, data_[i].shape[1]):
+            for j in range(1, n_cols):
+                # Mean
                 self.params_[i, 0, j] = np.mean(data_[i][:, j])
+                # Variance
                 self.params_[i, 1, j] = np.var(data_[i][:, j])
+
+        print(data_)
+        print(self.params_)
         return self
 
     def predict(self, X, y):
@@ -134,12 +143,8 @@ class GaussianNaiveBayes:
         # We first need to separate our data by class label
         self.labels_ = np.unique(y)
         self.n_labels_ = len(self.labels_)
-        n_cols = X.shape[1]
 
-        # Creates n_labels matrices holding the mean and variance for each column
-        self.params_ = np.zeros((self.n_labels_, 2, n_cols))
-
-        X = np.append(X, y, axis=1)
+        X = np.append(X, y[..., None], axis=1)
         # Data will contain arrays of training vectors separated by class
         # Data is a list of numpy arrays
         data_ = []
