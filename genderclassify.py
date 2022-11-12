@@ -1,4 +1,3 @@
-import numpy as np
 import GaussianNaiveBayes as GNB
 import pandas as pd
 
