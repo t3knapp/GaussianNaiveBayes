@@ -1,5 +1,5 @@
 import numpy as np
-import GaussianNaiveBayes as gnb
+import GaussianNaiveBayes as GNB
 import pandas as pd
 
 # Training Set importing as numpy array
@@ -14,10 +14,18 @@ test = pd.read_csv('Gender/Test.csv').to_numpy()
 X_test = test[:, 1:]
 y_test = test[:, 0]
 
-model = gnb.GaussianNaiveBayes()
+# Creating GNB Object
+model = GNB.GaussianNaiveBayes()
 
-print(np.mean(train[0:3, 2]))
+# Fitting the object to the training data
 model.fit(X_train, y_train)
+
+# Testing the model
+out = model.predict(X_test, y_test)
+
+print('Class predictions given by gaussian naive bayes:')
+print(out)
+
 
 
 

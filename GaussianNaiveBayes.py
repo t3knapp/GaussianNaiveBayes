@@ -62,7 +62,7 @@ class GaussianNaiveBayes:
             self: object
         """
         # Sorts the data into a list of arrays data.
-        # Each array in data is the training set for a given class label
+        # Each array in data is the training set for a given class label, with label at end of rows
         data_ = self._sort_data(X, y)
 
         # Creates n_labels matrices holding the mean and variance for each column
@@ -71,14 +71,11 @@ class GaussianNaiveBayes:
 
         # Calculate mean and variance of data and store in params
         for i in range(0, len(data_)):
-            for j in range(1, n_cols):
+            for j in range(0, n_cols):
                 # Mean
                 self.params_[i, 0, j] = np.mean(data_[i][:, j])
                 # Variance
                 self.params_[i, 1, j] = np.var(data_[i][:, j])
-
-        print(data_)
-        print(self.params_)
         return self
 
     def predict(self, X, y):
@@ -96,6 +93,7 @@ class GaussianNaiveBayes:
                         Prediction associated with each test vector
                 """
         # If prior is uniform, create the prior
+        self._create_prior()
 
         # Creating likelihoods for each class label
         # likelihoods shape = [n_labels][n_samples, n_features]
@@ -103,18 +101,22 @@ class GaussianNaiveBayes:
         for i in range(0, self.n_labels_):
             mean = self.params_[i, 0, :]
             var = self.params_[i, 1, :]
-            gaussian = (1/np.sqrt(2*np.pi*var))*np.exp(-(X-mean)*(X-mean)/(2*var))
+            exponent = -((X - mean) * (X - mean) / (2 * var))
+            gaussian = (1 / np.sqrt(2 * np.pi * var)) * np.exp(exponent.astype(float))
             likelihoods.append(gaussian)
 
         # Using likelihoods and prior with N-bayes formula
         # Post is a list of the posterior probabilities separated by label
-        post = np.zeros(X.shape[0], self.n_labels_)
-        predict = np.zeros(X.shape[0], 1)
+        post = np.zeros((X.shape[0], self.n_labels_))
+
         for i in range(0, self.n_labels_):
             # Multiply across rows of likelihoods and multiply by the prior
-            post[:, i] = self.prior_[i] * np.prod(likelihoods[i], axis=0)
+            post[:, i] = self.prior_[i] * np.prod(likelihoods[i], axis=1)
+
+        predict = np.empty((X.shape[0]), dtype=y.dtype)
+        for i in range(0, X.shape[0]):
             # Find the largest posterior and use index to tie it to a label
-            predict[i] = self.labels_[np.argmax(post[:, i])]
+            predict[i] = self.labels_[np.argmax(post[i, :])]
 
         # Calculating the percentage of correct predictions
         correct = 0
@@ -122,7 +124,7 @@ class GaussianNaiveBayes:
             if predict[i] == y[i]:
                 correct += 1
 
-        percent_correct = correct / len(y)
+        percent_correct = 100 * (correct / len(y))
         print("The prediction is " + str(percent_correct) + "% correct")
         return predict
 
@@ -165,7 +167,7 @@ class GaussianNaiveBayes:
                     self: object
                 """
         if self.prior_type_ == 'uniform':
-            self.prior_ = (1 / self.n_labels_) * np.ones((1, self.n_labels_))
+            self.prior_ = (1 / self.n_labels_) * np.ones(self.n_labels_)
         else:
             raise Exception("Must set prior distribution to uniform.")
         return self
