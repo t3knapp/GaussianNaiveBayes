@@ -6,8 +6,9 @@ class GaussianNaiveBayes:
     ...
     Parameters
     _________
-    prior_ : string
-        The prior distribution of the classes.
+    prior_type_: array-like, shape = [1, n_labels]
+        Prior distribution of our test data
+        We assume this is uniform for now
 
     Attributes
     __________
@@ -22,9 +23,8 @@ class GaussianNaiveBayes:
     labels_: array like, shape = [1, n_labels]
         Unique labels from the training set
 
-    prior_type_: array-like, shape = [1, n_labels]
-        Prior distribution of our test data
-        We assume this is uniform for now
+    prior_ : string
+        The prior distribution of the classes.
 
     data_: list of array-likes, shape = [n_labels, varies, n_cols]
         A list of matrices that contain the training data sorted by class label
