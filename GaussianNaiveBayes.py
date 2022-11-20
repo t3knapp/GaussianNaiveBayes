@@ -26,9 +26,6 @@ class GaussianNaiveBayes:
     prior_ : string
         The prior distribution of the classes.
 
-    data_: list of array-likes, shape = [n_labels, varies, n_cols]
-        A list of matrices that contain the training data sorted by class label
-
     params_ : array-like, shape = [1, 2, n_cols]
         Stores the mean and variance (var) from the data X
 
@@ -77,17 +74,17 @@ class GaussianNaiveBayes:
 
     def predict(self, X, y):
         """
-                Testing our stored parameters using a test dataset
+        Testing our stored parameters using a test dataset
 
-                Parameters:
-                    X: array-like, shape = [n_samples, n_features]
-                        Test vectors
-                    y: array-like, shape = [n_samples]
-                        Target values from test set
+            Parameters:
+            X: array-like, shape = [n_samples, n_features]
+                Test vectors
+            y: array-like, shape = [n_samples]
+                Target values from test set
 
-                Returns:
-                    predict: array-like, shape = [n_samples]
-                        Prediction associated with each test vector
+            Returns:
+                predict: array-like, shape = [n_samples]
+                Prediction associated with each test vector
                 """
         # If prior is uniform, create the prior
         self._create_prior()
