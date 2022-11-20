@@ -40,9 +40,6 @@ class GaussianNaiveBayes:
     predict(X_test, y_test) :
         Uses the parameters from train to predict labels and checks for accuracy
 
-    gaussian(x, mean, var):
-        Calculates the likelihood for a given attribute given mean, variance and test value
-
     """
 
     def __init__(self, prior_type_='uniform'):
