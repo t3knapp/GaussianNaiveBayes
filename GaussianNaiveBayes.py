@@ -3,15 +3,13 @@ import numpy as np
 class GaussianNaiveBayes:
     """
     A class to use Gaussian Naive Bayes to classify data.
-    ...
-    Parameters
-    _________
+
+    Attributes
+    __________
     prior_type_: array-like, shape = [1, n_labels]
         Prior distribution of our test data
         We assume this is uniform for now
 
-    Attributes
-    __________
     n_cols_: int
         Number of columns in the training dataset X
         Represents the number of unique attributes in our data set
